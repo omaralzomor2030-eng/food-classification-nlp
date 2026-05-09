@@ -1,10 +1,10 @@
 # 🧠 Food Classification using NLP (DistilBERT)
 
-## 📌 Project Overview
+## 📌 Overview
 
-This project focuses on building a deep learning model to automatically classify food products based on their ingredient text using Natural Language Processing (NLP).
+This project builds an intelligent Natural Language Processing (NLP) system that classifies food products based on their ingredient text.
 
-The system reads raw ingredient lists and predicts the correct food category such as:
+Given a list of ingredients, the model predicts the correct food category such as:
 
 * Snacks
 * Beverages
@@ -13,72 +13,67 @@ The system reads raw ingredient lists and predicts the correct food category suc
 * Condiments
 * And more...
 
+The system is powered by a fine-tuned DistilBERT model using the HuggingFace Transformers library.
+
 ---
 
-## 🎯 Objective
+## 🎯 Objectives
 
-The goal of this project is to:
-
-* Automate food product classification
-* Improve data organization for food databases
-* Enable smart applications in nutrition and food analysis
+* Automate food product categorization
+* Handle noisy real-world ingredient data
+* Build a scalable NLP classification pipeline
+* Deploy a reusable and testable model
 
 ---
 
 ## 📊 Dataset
 
 * Source: Open Food Facts
-* Raw data collected: ~300,000 records
-* Cleaned dataset: ~98,000 records
-* Final dataset used for training: ~98,349 samples
-* Number of categories: 11–15 classes
+* Raw records: ~300,000
+* Cleaned dataset: ~98,000 samples
+* Final classes: 11–15 categories
 
-### 🧾 Data Fields
+### 🧾 Data Format
 
-* `text`: Ingredient list
-* `label`: Food category
-
----
-
-## 🧹 Data Cleaning & Preprocessing
-
-Several preprocessing steps were applied:
-
-* Removed non-food text such as:
-
-  * "Add the ingredients"
-  * "Composition minérale"
-* Removed Unknown and Null categories
-* Removed rare classes (less than 30 samples)
-* Removed numbers, symbols, and noise
-* Converted all text to lowercase
-* Filtered only valid ingredient-like entries
+| Column | Description      |
+| ------ | ---------------- |
+| text   | Ingredients list |
+| label  | Food category    |
 
 ---
 
-## 📈 Exploratory Data Analysis
+## 🧹 Data Preprocessing
 
-* Total categories: 11–15
-* Most common category: Snacks (~31%)
-* Dataset is **imbalanced**
-* Addressed using **class weights during training**
+The dataset required extensive cleaning due to noise and inconsistencies.
+
+### Key Steps:
+
+* Convert text to lowercase
+* Remove numbers, symbols, and extra spaces
+* Remove invalid entries (e.g., "add the ingredients")
+* Filter non-food text
+* Remove `Unknown` and `Null` labels
+* Remove rare categories (< 30 samples)
+* Validate ingredient-like content using keyword filtering
 
 ---
 
 ## ⚙️ Model Architecture
 
-* Model: DistilBERT (`distilbert-base-uncased`)
+* Model: `distilbert-base-uncased`
 * Task: Multi-class text classification
 * Framework: HuggingFace Transformers
+* Backend: PyTorch
 
 ---
 
-## 🏋️ Training Details
+## 🏋️ Training Setup
 
 * Epochs: 3
 * Batch size: 16
 * Learning rate: 2e-5
-* Loss Function: CrossEntropyLoss with class weights
+* Weight decay: 0.01
+* Loss: CrossEntropy (with class weights)
 * Train/Validation/Test split:
 
   * 70% Training
@@ -87,18 +82,18 @@ Several preprocessing steps were applied:
 
 ---
 
-## 📊 Results
+## 📈 Results
 
 | Metric   | Score |
 | -------- | ----- |
 | Accuracy | 0.87  |
 | F1 Score | 0.87  |
 
-### 🔍 Observations:
+### 🔍 Notes:
 
-* Strong performance on major classes (Snacks, Dairies, Beverages)
-* Lower performance on rare categories
-* Model generalizes well on unseen data
+* Strong performance on major categories (Snacks, Dairies, Beverages)
+* Lower performance on rare classes
+* Class imbalance handled using weighted loss
 
 ---
 
@@ -108,7 +103,7 @@ Several preprocessing steps were applied:
 
 ---
 
-## 🚀 How to Use the Model
+## 🚀 Quick Test
 
 ```python
 from transformers import pipeline
@@ -118,25 +113,28 @@ classifier = pipeline(
     model="Omarrs11/food-classifier-model"
 )
 
-result = classifier("milk, sugar, cocoa butter")
-print(result)
+classifier("milk, sugar, cocoa")
 ```
 
 ---
 
 ## 🧪 Example
 
-Input:
-milk, sugar, cocoa butter
+**Input:**
 
-Output:
+```
+milk, sugar, cocoa butter
+```
+
+**Output:**
+
+```
 Dairies (Confidence: ~0.87)
+```
 
 ---
 
 ## 🖥️ Web Interface (Gradio)
-
-You can run a simple interactive interface:
 
 ```python
 import gradio as gr
@@ -149,18 +147,95 @@ classifier = pipeline(
 
 def predict(text):
     result = classifier(text)
-    return f"Prediction: {result[0]['label']} | Confidence: {result[0]['score']:.2f}"
+    return f"{result[0]['label']} ({result[0]['score']:.2f})"
 
-interface = gr.Interface(
+gr.Interface(
     fn=predict,
-    inputs=gr.Textbox(lines=3, placeholder="Enter ingredients..."),
+    inputs="text",
     outputs="text",
-    title="🍔 Food Classification AI",
-    description="Enter ingredient text and the model will predict the category."
-)
-
-interface.launch()
+    title="🍔 Food Classifier",
+    description="Enter ingredients to classify food category"
+).launch()
 ```
+
+---
+
+## 📁 Project Structure
+
+```
+food-classification-nlp/
+│
+├── README.md
+├── requirements.txt
+│
+├── notebook/
+│   └── project.ipynb
+│
+├── src/
+│   ├── preprocess.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── inference.py
+│   ├── scraping.py
+│
+├── data/
+│   └── sample_dataset.csv
+│
+├── app.py
+```
+
+---
+
+## ⚡ How to Run
+
+### 1. Install dependencies
+
+```
+pip install -r requirements.txt
+```
+
+### 2. Preprocess data
+
+```
+python src/preprocess.py
+```
+
+### 3. Train the model
+
+```
+python src/train.py
+```
+
+### 4. Evaluate the model
+
+```
+python src/evaluate.py
+```
+
+### 5. Run inference
+
+```
+python src/inference.py
+```
+
+---
+
+## ⚠️ Challenges
+
+* Noisy and inconsistent ingredient data
+* Multi-language entries
+* Severe class imbalance
+* Data cleaning complexity
+
+---
+
+## 🔮 Future Improvements
+
+* Improve minority class performance
+* Use larger transformer models (RoBERTa, DeBERTa)
+* Deploy as API (FastAPI / Flask)
+* Add real-time web interface
+* Expand dataset size
 
 ---
 
@@ -175,46 +250,10 @@ interface.launch()
 
 ---
 
-## 📁 Project Structure
-
-```
-food-classifier/
-│
-├── notebook/
-│   └── project.ipynb
-│
-├── src/
-│   ├── cleaning.py
-│   ├── training.py
-│
-├── app.py
-├── README.md
-├── requirements.txt
-```
-
----
-
-## ⚠️ Challenges
-
-* Noisy and inconsistent data
-* Multiple languages in dataset
-* Class imbalance
-* Data cleaning complexity
-
----
-
-## 🔮 Future Work
-
-* Improve performance on minority classes
-* Use larger models (RoBERTa, DeBERTa)
-* Deploy as API or web application
-* Expand dataset
-
----
-
 ## 👨‍💻 Author
 
 Omar
-AI & NLP Project
 
 ---
+
+## ⭐ If you found this project useful, consider giving it a star!
