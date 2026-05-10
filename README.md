@@ -1,6 +1,6 @@
-# 🧠 Food Classification using NLP (DistilBERT)
+#  Food Classification using NLP (DistilBERT)
 
-## 📌 Overview
+##  Overview
 
 This project builds an intelligent Natural Language Processing (NLP) system that classifies food products based on their ingredient text.
 
@@ -17,7 +17,7 @@ The system is powered by a fine-tuned DistilBERT model using the HuggingFace Tra
 
 ---
 
-## 🎯 Objectives
+##  Objectives
 
 * Automate food product categorization
 * Handle noisy real-world ingredient data
@@ -42,7 +42,7 @@ The system is powered by a fine-tuned DistilBERT model using the HuggingFace Tra
 
 ---
 
-## 🧹 Data Preprocessing
+##  Data Preprocessing
 
 The dataset required extensive cleaning due to noise and inconsistencies.
 
@@ -67,7 +67,7 @@ The dataset required extensive cleaning due to noise and inconsistencies.
 
 ---
 
-## 🏋️ Training Setup
+##  Training Setup
 
 * Epochs: 3
 * Batch size: 16
@@ -103,7 +103,7 @@ The dataset required extensive cleaning due to noise and inconsistencies.
 
 ---
 
-## 🚀 Quick Test
+##  Quick Test
 
 ```python
 from transformers import pipeline
